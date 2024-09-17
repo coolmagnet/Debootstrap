@@ -1,6 +1,6 @@
 # INSTALLING DEBIAN -- THE ARCH LINUX WAY (VIA DEBOOTSTRAP)
 Instructions how to install Debian using debootstrap (LUKS)<br><br>
-<b>Disclaimer:  This technical advice is provided without warranty of any kind. The user assumes all responsibility and risk for its use. The provider shall not be liable for any damages arising from the use of this advice.</b><br>
+<b>Disclaimer:  This technical guide is provided without warranty of any kind. The user assumes all responsibility and risk for its use. The provider shall not be liable for any damages arising from the use of this guide.</b><br>
 <br>
 Installing Debian via debootstrap gives you better control over Disk partitoning, package installation, and system configuration.<br>
 Original work by:  https://gist.github.com/varqox/42e213b6b2dde2b636ef<br>
