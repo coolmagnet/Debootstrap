@@ -2,7 +2,7 @@
 Instructions how to install Debian using debootstrap (LUKS)<br><br>
 <b>Disclaimer:  This technical guide is provided without warranty of any kind. The user assumes all responsibility and risk for its use. The provider shall not be liable for any damages arising from the use of this guide.</b><br>
 <br>
-Installing Debian via debootstrap gives you better control over Disk partitoning, package installation, and system configuration.<br>
+Installing Debian via debootstrap gives you better control over disk partitoning, package installation, and system configuration.<br>
 Original work by:  https://gist.github.com/varqox/42e213b6b2dde2b636ef<br>
 Added:  Debian Live CD, LUKS, LVM, Timesync, Additional Steps<br>
 <br>
@@ -121,9 +121,9 @@ cryptsetup open <device> NAME
 <br>
 
 Install debootstrap<br>
-Get the latest debootstrap:  https://deb.debian.org/debian/pool/main/d/debootstrap/debootstrap<br>
+Get the latest debootstrap:  http://ftp.debian.org/debian/pool/main/d/debootstrap/<br>
 ```bash
-curl --remote-name https://deb.debian.org/debian/pool/main/d/debootstrap/debootstrap_1.0.137_all.deb
+curl --remote-name http://ftp.debian.org/debian/pool/main/d/debootstrap/debootstrap_1.0.141_all.deb
 ```
 Then install it:
 ```bash
@@ -172,6 +172,18 @@ cryptsetup luksUUID /dev/sda5 --uuid "9a8a3d4f-ee64-4250-b9c4-4371afcb3eac"
 
 <br>
 <br>
+<b>[Optional]</b>
+Syncing the date and time before chroot ensure 'apt update' registers the correct date and time for your location.<br>
+Note: If you perform this step you will still need to install the 'systemd-timesyncd' again after you choose your timezone.<br><br>
+
+Sync Date and Time
+```bash
+apt install systemd-timesyncd
+```
+<br>
+<br>
+
+
 
 Chroot into installed base system
 ```bash
@@ -367,7 +379,7 @@ passwd USERNAME
 ```
 Replace `USERNAME` with username of an user you want to create.
 
-(Optional) If you intend to use `sudo`:
+<b>[Optional]</b> If you intend to use `sudo`:
 * Install `sudo`:
     ```bash
     apt install sudo
