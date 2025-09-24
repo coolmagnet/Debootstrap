@@ -1,5 +1,5 @@
 # INSTALLING DEBIAN -- THE ARCH LINUX WAY (VIA DEBOOTSTRAP)
-Instructions how to install Debian using debootstrap (LUKS)<br><br>
+Instructions on how to install Debian using debootstrap (LUKS)<br><br>
 <b>Disclaimer:  This technical guide is provided without warranty of any kind. The user assumes all responsibility and risk for its use. The provider shall not be liable for any damages arising from the use of this guide.</b><br>
 <br>
 Installing Debian via debootstrap gives you better control over disk partitoning, package installation, and system configuration.<br>
@@ -358,7 +358,106 @@ For example:<br>
 <br>
 <br>
 
-Install boot loader<br>
+
+
+
+<b>[Optional]</b>
+If you are planning to Dual Boot and make this Debian Installation a secondary Operating System then you will NOT need to install grub2 or run 'grub-install'.  However, you still need to run 'grub-mkconfig -o /boot/grub/grub.cfg' follow by 'update-intramfs -u' as 'update-intramfs -u' uses '/boot/grub/grub.cfg' to build the initial ramdisk.
+
+Here is a sample on how to create a custom grub entry (/etc/grub.d/40_custom) for a secondary Operating System.  This file should be on your primary Operating System that has Grub fully installed.
+```bash
+#### Debian custom grub entry (LUKS) ####
+
+root@debian:~# lsblk -f
+NAME           FSTYPE      FSVER LABEL UUID                                 FSAVAIL FSUSE% MOUNTPOINTS
+sda                                                                                        
+├─sda1         ext2        1.0   boot  55b99e30-8083-41ac-bfa7-7bdb655c3f89  925.9M     8% /boot
+└─sda2         crypto_LUKS 2           ca44c280-b454-4715-8d69-6aedf7b01ca6                
+  └─sda2_crypt ext4        1.0         adafb379-e6ad-45fe-b337-4e24d3774a3d   34.6G     8% /
+sdb                                                                                        
+├─sdb1         ext4        1.0         884a0c50-7ff6-4630-a1fc-e8c875a85e2e                
+├─sdb2         ext2        1.0   boot  b82a12e7-66bc-4213-baf1-8580250485fb    433M    14% /mnt/boot
+└─sdb3         crypto_LUKS 2           dd6fc6c5-18f4-49dd-a8ce-831cd72bc0d1                
+  └─sdb3_crypt ext4        1.0         5290f1c7-7da3-44d4-9569-20cd33e05fe6   14.8G    17% /mnt
+
+root@debian:~# cat > /etc/fstab << HEREDOC
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# systemd generates mount units based on this file, see systemd.mount(5).
+# Please run 'systemctl daemon-reload' after making changes here.
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+UUID=b82a12e7-66bc-4213-baf1-8580250485fb /boot           ext4    defaults        0       2
+UUID=5290f1c7-7da3-44d4-9569-20cd33e05fe6 /               ext4    errors=remount-ro 0       1
+HEREDOC
+
+root@debian:~# echo "debian_crypt UUID=5290f1c7-7da3-44d4-9569-20cd33e05fe6 none luks,discard" >> /etc/crypttab
+
+root@debian:~# cat /etc/grub.d/40_custom
+#!/bin/sh
+exec tail -n +3 $0
+# This file provides an easy way to add custom menu entries.  Simply type the
+# menu entries you want to add after this comment.  Be careful not to change
+# the 'exec tail' line above.
+menuentry 'Debian GNU/Linux 13 (trixie) (on /dev/sdb3)' --class debian --class gnu-linux --class gnu --class os $menuentry_id_option 'osprober-gnulinux-simple-6e3bedee-83f5-4f8a-8d39-4216e92c120a' {
+	insmod part_msdos
+	insmod ext2
+	set root='hd1,msdos2'
+	if [ x$feature_platform_search_hint = xy ]; then
+	  search --no-floppy --fs-uuid --set=root --hint-bios=hd1,msdos2 --hint-efi=hd1,msdos2 --hint-baremetal=ahci1,msdos2  b82a12e7-66bc-4213-baf1-8580250485fb
+	else
+	  search --no-floppy --fs-uuid --set=root b82a12e7-66bc-4213-baf1-8580250485fb
+	fi
+#	linux /vmlinuz-6.12.43+deb13-amd64 root=/dev/mapper/sdb3_crypt ro
+	linux /vmlinuz-6.12.43+deb13-amd64 root=UUID=5290f1c7-7da3-44d4-9569-20cd33e05fe6
+#	linux /vmlinuz-6.12.43+deb13-amd64 root=UUID=5290f1c7-7da3-44d4-9569-20cd33e05fe6 ro preempt=full mitigations=off nosimplefb=1 net.ifnames=0
+	initrd /initrd.img-6.12.43+deb13-amd64
+}
+
+
+#### openSUSE custom grub entry ####
+
+suse:~ # lsblk -f
+NAME   FSTYPE FSVER LABEL UUID                                 FSAVAIL FSUSE% MOUNTPOINTS
+sda                                                                           
+├─sda1                                                                        
+├─sda2 ext4   1.0         4b7ccc49-d026-47c6-8ff3-7936d4f0c7de   31.9G   15% /
+└─sda3 swap   1           0b6aed17-430f-4fff-80c8-c263db929c3d                [SWAP]
+sdb                                                                           
+├─sdb1 ext4   1.0         3abe6454-cf31-43f3-b8a4-216e52b36896   433M    14% /mnt/boot             
+└─sdb2 xfs                1620c02a-b7b2-4e5c-afd6-e725a55d66aa   14.8G   17% /mnt        
+
+suse:~ # cat /etc/grub.d/40_custom
+#!/bin/sh
+exec tail -n +3 $0
+# This file provides an easy way to add custom menu entries.  Simply type the
+# menu entries you want to add after this comment.  Be careful not to change
+# the 'exec tail' line above.
+menuentry 'openSUSE Leap 15.6 (on /dev/sdb2)' --class opensuse --class gnu-linux --class gnu --class os $menuentry_id_option 'osprober-gnulinux-simple-3abe6454-cf31-43f3-b8a4-216e52b36896' {
+        insmod part_msdos
+        insmod ext2
+        set root='hd1,msdos2'
+        if [ x$feature_platform_search_hint = xy ]; then
+          search --no-floppy --fs-uuid --set=root --hint-bios=hd1,msdos2 --hint-efi=hd1,msdos2 --hint-baremetal=ahci1,msdos2  3abe6454-cf31-43f3-b8a4-216e52b36896
+        else
+          search --no-floppy --fs-uuid --set=root 3abe6454-cf31-43f3-b8a4-216e52b36896
+        fi
+        linux /boot/vmlinuz-6.4.0-150600.21-default root=UUID=1620c02a-b7b2-4e5c-afd6-e725a55d66aa splash=silent preempt=full nosimplefb=1
+#       linux /boot/vmlinuz-6.4.0-150600.21-default root=UUID=1620c02a-b7b2-4e5c-afd6-e725a55d66aa splash=silent preempt=full nosimplefb=1 mitigations=off
+#       linux /boot/vmlinuz-6.4.0-150600.21-default root=UUID=1620c02a-b7b2-4e5c-afd6-e725a55d66aa splash=silent preempt=full quiet security=apparmor mitigations=off
+        initrd /boot/initrd-6.4.0-150600.21-default
+}
+```
+
+
+<br>
+
+
+Install Grub boot loader<br>
 This will not overwrite the current grub installation on disk, we will do it at the very end of these instructions.
 ```bash
 apt install grub2
