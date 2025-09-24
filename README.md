@@ -10,7 +10,7 @@ Get the latest Debian Live CD (https://www.debian.org/CD/live/)<br>
 <br>
 <b>[Optional]</b>
 If you want to perform the Debian installation remotely.<br>
-Install openssh-server, add new user to sudo group then ssh to Live CD.<br>
+Install openssh-server, add new user to sudo group, get the IP address then ssh to Live CD.<br>
 Create user and set password:
 ```bash
 useradd USERNAME -m -s /bin/bash
@@ -121,6 +121,11 @@ cryptsetup open <device> NAME
 <br>
 
 Install debootstrap<br>
+Install debootstrap from the Live CD<br>
+```bash
+apt update && apt install debootstrap
+```
+OR<br><br>
 Get the latest debootstrap:  http://ftp.debian.org/debian/pool/main/d/debootstrap/<br>
 ```bash
 curl --remote-name http://ftp.debian.org/debian/pool/main/d/debootstrap/debootstrap_1.0.141_all.deb
