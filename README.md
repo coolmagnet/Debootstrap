@@ -395,7 +395,7 @@ UUID=b82a12e7-66bc-4213-baf1-8580250485fb /boot           ext4    defaults      
 UUID=5290f1c7-7da3-44d4-9569-20cd33e05fe6 /               ext4    errors=remount-ro 0       1
 HEREDOC
 
-root@debian:~# echo "debian_crypt UUID=5290f1c7-7da3-44d4-9569-20cd33e05fe6 none luks,discard" >> /etc/crypttab
+root@debian:~# echo "debian_crypt UUID=dd6fc6c5-18f4-49dd-a8ce-831cd72bc0d1 none luks,discard" >> /etc/crypttab
 
 root@debian:~# cat /etc/grub.d/40_custom
 #!/bin/sh
