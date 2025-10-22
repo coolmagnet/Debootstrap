@@ -362,9 +362,16 @@ For example:<br>
 
 
 <b>[Optional]</b>
-If you are planning to Dual Boot and make this Debian Installation a secondary Operating System then you will NOT need to install grub2 or run 'grub-install'.  However, you still need to run 'grub-mkconfig -o /boot/grub/grub.cfg' follow by 'update-intramfs -u' as 'update-intramfs -u' uses '/boot/grub/grub.cfg' to build the initial ramdisk.
+If you are planning to Dual Boot and make this Debian Installation a secondary Operating System:
+<ul>
+  <li><code>apt install grub2</code></li>
+  <li><code>grub-mkconfig -o /boot/grub/grub.cfg</code></li>
+  <li><code>update-intramfs -u</code></li>
+  <li>Do NOT run <code>grub-install</code></li>
+</ul>
+<code>update-intramfs -u</code> uses <code>/boot/grub/grub.cfg</code> to build the initial ramdisk.
 
-Here is a sample on how to create a custom grub entry (/etc/grub.d/40_custom) for a secondary Operating System.  This file should be on your primary Operating System that has Grub fully installed.
+Here is a sample on how to create a custom grub entry <code>/etc/grub.d/40_custom</code> for a secondary Operating System.  This file should be on your primary Operating System that has Grub fully installed.
 ```bash
 #### Debian custom grub entry (LUKS) ####
 
