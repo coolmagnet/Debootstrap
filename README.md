@@ -371,7 +371,7 @@ If you are planning to Dual Boot and make this Debian Installation a secondary O
 </ul>
 <code>update-intramfs -u</code> uses <code>/boot/grub/grub.cfg</code> to build the initial ramdisk.
 
-Here is a sample on how to create a custom grub entry <code>/etc/grub.d/40_custom</code> for a secondary Operating System.  This file should be on your primary Operating System that has Grub fully installed.
+Here is a sample for how to create a custom grub entry <code>/etc/grub.d/40_custom</code> for a secondary Operating System.  Always best to use the UUID instead of the device name.  You can also use <code>os-prober</code> to detect other Windows or Linux Operating System.  File <code>/etc/grub.d/40_custom</code> or <code>os-prober</code> should be performed on your primary Operating System that has Grub fully installed.
 ```bash
 #### Debian custom grub entry (LUKS) ####
 
