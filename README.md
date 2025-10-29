@@ -161,6 +161,9 @@ Install Debain Base System
 Usage: `debootstrap --arch ARCH RELEASE DIR MIRROR`
 ```bash
 debootstrap --arch amd64 stable /mnt https://deb.debian.org/debian
+debootstrap --arch amd64 bullseye /mnt https://deb.debian.org/debian
+debootstrap --arch amd64 bookworm /mnt https://deb.debian.org/debian
+debootstrap --arch amd64 trixie /mnt https://deb.debian.org/debian
 ```
 
 <br>
