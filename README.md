@@ -288,7 +288,17 @@ apt update
 <br>
 <br>
 
-Fill `/etc/crypttab`:
+<b>[LUKS]</b> Fill <code>/etc/crypttab</code><br>
+Note: The UUID is not the LUKS container but the device that holds the LUKS container.<br>
+Example:  The UUID is <code>aae291d8-2556-4f45-bc7a-b74349f7bd27</code>, not <code>cd4bd571-2d92-49f6-b2ae-a67a5a30af85</code>
+<pre>sda                                                                                            
+├─sda1
+│    ext4   1.0   OS                       0cba0188-d0c9-4d49-af7b-bd3ec7fad992    8.9G     7% /
+└─sda2
+     crypto 2                              aae291d8-2556-4f45-bc7a-b74349f7bd27                
+  └─HOME
+     ext4   1.0   HOME                     cd4bd571-2d92-49f6-b2ae-a67a5a30af85
+</pre>
 ```bash
 echo "sda3_crypt UUID=$(lsblk --noheadings -o UUID /dev/sda3 |head -n 1) none luks,discard" >> /etc/crypttab
 ```
