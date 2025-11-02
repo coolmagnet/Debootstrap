@@ -551,12 +551,14 @@ This will make grub search for and add to menu other systems like Windows or oth
 <br>
 <br>
 
-Finish installation
+
 <b>EFI</b>
 ```bash
 apt install efibootmgr efivar grub-efi grub-efi-amd64-signed
 ```
-Grub Install
+<br>
+
+Grub Install<br>
 Where `/dev/GRUBDISK` is the disk on which you want grub to be installed e.g. `/dev/sda` (don't confuse it with a partition which is e.g. `/dev/sda1`).
 ```bash
 update-grub && grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB /dev/GRUBDISK
