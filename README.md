@@ -357,6 +357,8 @@ Install a Networking package or Additional packages<br>
 apt install network-manager
 # XFCE
 apt install network-manager xfce4 xfce4-goodies lightdm lightdm-gtk-greeter firefox-esr chromium filezilla vlc mpv openssh-server
+# Audio
+apt install pulseaudio pulseaudio-utils pavucontrol gstreamer1.0-pulseaudio xfce4-pulseaudio-plugin alsa-utils alsa-ucm-conf alsa-topology-conf sound-theme-freedesktop
 ```
 
 <br>
